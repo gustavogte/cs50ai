@@ -32,6 +32,8 @@ def transition_model(corpus: dict, damping_factor: float, page: str = None) -> d
     print("\nModel\n")
 
     t_model = dict()
+    n_pages = len(corpus)
+    # Initialize mode with equal probabilities
     for item in corpus:
         p_corpus = (1 / len(corpus.keys())) * (1 - damping_factor) 
         print(item, p_corpus)
@@ -43,6 +45,20 @@ def transition_model(corpus: dict, damping_factor: float, page: str = None) -> d
             if item == page:
                 print("        Here we go ....")
                 print()
+    if corpus[page]:
+        linked_pages = corpus[page]
+        n_links = len(linked_pages)
+        link_prob = damping_factor / n_links
+        for link in linked_pages:
+            t_model[link] += link_prob
+
+    else:
+    # If no outgoing links, treat as linking to all pages equally
+    # So if we get to a dead end with no links =>
+    # treat it as if it links to all pages in the corpus, equally choose randomly.
+        for item in corpus:
+            t_model[item] += damping_factor / n_pages
+
 
     print()
     print(t_model)

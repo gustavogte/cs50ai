@@ -200,7 +200,7 @@ def iterate_pagerank(corpus: dict, damping_factor: float) -> dict:
                 # If there are no links send to all pages with equal probability
                 if n_links == 0:
                     p += d * (pages[page] / N)
-        pages.update({page: p})
+            pages.update({page: p})
         print(x, pages)
         # All pages must have an difference less than .001
         # Must store the previos iteration and the current to check the difference.
