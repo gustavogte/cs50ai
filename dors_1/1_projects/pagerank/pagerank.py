@@ -103,11 +103,12 @@ def sample_pagerank(corpus: dict, damping_factor: float, n: int) -> dict:
     page = random.choice(list(corpus.keys()))
     # print("Page 0: ", page)
     visits = list()
-    n_copies = 1000
+    n_copies = 1000 # optional for get_page() to create the list of elements with the transition_model, 100 is by default, 
     for _ in range(1, n):
         t_model = transition_model(corpus, page, damping_factor)
         # print(t_model)
         #page = get_page(t_model, n_copies)
+        #page = get_page(t_model)
         page = get_page_2(t_model)
         # print(f"Page {sample}: ", page)
         visits.append(page)
@@ -126,7 +127,7 @@ def sample_pagerank(corpus: dict, damping_factor: float, n: int) -> dict:
 
 
 ## GG
-def get_page(model: dict, n: int) -> str:
+def get_page(model: dict, n:int = 100) -> str:
 
     data_sample = list()
     for item in model:
