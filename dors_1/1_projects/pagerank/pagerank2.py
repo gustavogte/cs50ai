@@ -103,12 +103,12 @@ def sample_pagerank(corpus: dict, damping_factor: float, n: int) -> dict:
     page = random.choice(list(corpus.keys()))
     # print("Page 0: ", page)
     visits = list()
-    n_copies = 1000  # optional for get_page() to create the list of elements with the transition_model, 100 is by default,
+    n_copies = 1000 # optional for get_page() to create the list of elements with the transition_model, 100 is by default, 
     for _ in range(1, n):
         t_model = transition_model(corpus, page, damping_factor)
         # print(t_model)
-        # page = get_page(t_model, n_copies)
-        # page = get_page(t_model)
+        #page = get_page(t_model, n_copies)
+        #page = get_page(t_model)
         page = get_page_2(t_model)
         # print(f"Page {sample}: ", page)
         visits.append(page)
@@ -127,7 +127,7 @@ def sample_pagerank(corpus: dict, damping_factor: float, n: int) -> dict:
 
 
 ## GG
-def get_page(model: dict, n: int = 100) -> str:
+def get_page(model: dict, n:int = 100) -> str:
 
     data_sample = list()
     for item in model:
@@ -136,19 +136,19 @@ def get_page(model: dict, n: int = 100) -> str:
         for _ in range(copies):
             # print(item, "x", copies)
             data_sample.append(item)
-    # print(data_sample)
+    #print(data_sample)
     return random.choice(data_sample)
-
 
 def get_page_2(model: dict) -> str:
     model_keys = list(model.keys())
     model_values = list(model.values())
-
-    return random.choices(model_keys, weights=model_values)[0]
+    
+    return random.choices(model_keys, weights = model_values)[0]
 
 
 def iterate_pagerank(corpus: dict, damping_factor: float) -> dict:
-    pass
+    # return value = dict {Key-page: value-PageRank}
+    # sum values == 1
     """
     Return PageRank values for each page by iteratively updating
     PageRank values until convergence.
@@ -158,45 +158,50 @@ def iterate_pagerank(corpus: dict, damping_factor: float) -> dict:
     PageRank values should sum to 1.
     """
     print("\nIterate PageRank\n")
-    quit()
-
-
-def pagerank(corpus: dict, damping_factor: float) -> dict:
     d = DAMPING
-    accurrate_factor = 0.001
+    accurrate_factor = .001
     corpus_keys = list(corpus.keys())
-    N = len(corpus_keys)
-
-    fix = (1 - d) / N
+    N = len(corpus_keys) 
+   
+    fix = (1 - d) / N 
 
     # First iteration => Initialize values 1 / N
     pages = dict()
     for page in corpus_keys:
-        pages[page] = 1 / N
+        pages[page] = 1 / N      
     print(pages)
     print()
 
-    for page in pages:
-        links = corpus[page]
-        n_links = len(links)
-        p = fix
-        for link in links:
-            # Check if our page appears in corpus[page] (links)
-            if page in links:
-                print(page, "->", link)
-                p += d * (pages[page] / n_links)
-                print(page, p)
-            # If there are no links send to all pages with equal probability
-            if n_links == 0:
-                p += d * (pages[page] / N)
-        pages.update({page: p})
-    print(pages)
-    # All pages must have an difference less than .001
-    # Must store the previos iteration and the current to check the difference.
+    x = 0
+    while True:
+        pages_old = pages
+        print("\npages old\n", pages_old)
+        print()
+        for page in pages:
+            links = corpus[page]
+            n_links = len(links)
+            p = fix
+            for link in links:
+                # Check if our page appears in corpus[page] (links)
+                if page in links:
+                    print(page, "->", link)
+                    p += d * (pages[page] / n_links)
+                    print(page, p)
+                # If there are no links send to all pages with equal probability
+                if n_links == 0:
+                    p += d * (pages[page] / N)
+            pages.update({page: p})
+            pages_old.update({page: p})
+        print(x, pages)
+        # All pages must have an difference less than .001
+        # Must store the previos iteration and the current to check the difference.
+        x += 1 
+        if x == 3:
+            break
 
     # page with no links should be calculated as having one link for every page includint itself.
     # process go until PageRank changes less than .001
-
+    quit()
 
 if __name__ == "__main__":
     main()
