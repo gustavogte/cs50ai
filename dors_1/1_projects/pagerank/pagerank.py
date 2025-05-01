@@ -156,16 +156,13 @@ def iterate_pagerank(corpus: dict, damping_factor: float) -> dict:
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
     """
-    # print("\nIterate PageRank\n")
-    # damping_factor = DAMPING
     accurracy_factor = 0.001
-
     # First iteration => Initialize values 1 / N
-    start_pages_ranks = dict()
     N = len(corpus)
+    start_pages_ranks = dict()
     for page in corpus:
         start_pages_ranks[page] = 1 / N
-    # print(pages_ranks)
+    # print(start_pages_ranks)
     print()
 
     iteration = 0

@@ -145,63 +145,65 @@ def get_page_2(model: dict) -> str:
     
     return random.choices(model_keys, weights = model_values)[0]
 
-
 def iterate_pagerank(corpus: dict, damping_factor: float) -> dict:
-    # return value = dict {Key-page: value-PageRank}
-    # sum values == 1
     """
-    Return PageRank values for each page by iteratively updating
-    PageRank values until convergence.
-
-    Return a dictionary where keys are page names, and values are
-    their estimated PageRank value (a value between 0 and 1). All
-    PageRank values should sum to 1.
+    Iteratively update PageRank values until convergence.
+    Returns a dictionary where keys are page names and values are
+    their estimated PageRank (values between 0 and 1).
     """
-    print("\nIterate PageRank\n")
-    d = DAMPING
-    accurrate_factor = .001
-    corpus_keys = list(corpus.keys())
-    N = len(corpus_keys) 
-   
-    fix = (1 - d) / N 
+    accuracy_factor = 0.001
+    N = len(corpus)
+    page_ranks = dict()
+    for page in corpus:
+        page_ranks[page] = 1 / N
+    iteration = 0
 
-    # First iteration => Initialize values 1 / N
-    pages = dict()
-    for page in corpus_keys:
-        pages[page] = 1 / N      
-    print(pages)
-    print()
-
-    x = 0
     while True:
-        pages_old = pages
-        print("\npages old\n", pages_old)
+        new_page_ranks = pagerank(corpus, page_ranks, damping_factor)
+
+        # Compute max difference to check convergence
+        max_difference = 0
+        for page in corpus:
+            diff = abs(new_page_ranks[page] - page_ranks[page])
+            if diff > max_difference:
+                max_difference = diff
+
+        # Debug info
+        print(f"Iteration: {iteration}")
+        print("Old Page Ranks:", page_ranks)
+        print("New Page Ranks:", new_page_ranks)
+        print("Max Difference:", max_difference)
         print()
-        for page in pages:
-            links = corpus[page]
-            n_links = len(links)
-            p = fix
-            for link in links:
-                # Check if our page appears in corpus[page] (links)
-                if page in links:
-                    print(page, "->", link)
-                    p += d * (pages[page] / n_links)
-                    print(page, p)
-                # If there are no links send to all pages with equal probability
-                if n_links == 0:
-                    p += d * (pages[page] / N)
-            pages.update({page: p})
-            pages_old.update({page: p})
-        print(x, pages)
-        # All pages must have an difference less than .001
-        # Must store the previos iteration and the current to check the difference.
-        x += 1 
-        if x == 3:
+
+        if max_difference <= accuracy_factor:
             break
 
-    # page with no links should be calculated as having one link for every page includint itself.
-    # process go until PageRank changes less than .001
-    quit()
+        page_ranks = new_page_ranks
+        iteration += 1
+
+    return page_ranks
+
+
+def pagerank(corpus:dict, ranks:dict, damping_factor:float) -> dict:
+    """
+    Compute one iteration of PageRank values.
+    """
+    N = len(corpus)
+    new_ranks = dict()
+
+    for page in corpus:
+        total_ranks = 0
+        for page_links in corpus:
+            links = corpus[page_links]
+            if not links:
+                total_ranks += ranks[page_links] / N
+            elif page in links:
+                total_ranks += ranks[page_links] / len(links)
+
+        new_ranks[page] = (1 - damping_factor) / N + damping_factor * total_ranks
+
+    return new_ranks
+
 
 if __name__ == "__main__":
     main()
