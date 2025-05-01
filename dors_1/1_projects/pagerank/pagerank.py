@@ -178,7 +178,7 @@ def iterate_pagerank(corpus: dict, damping_factor: float) -> dict:
                 # no links, equal probablility
                 if len(links) == 0:
                     total += pages_ranks[page_links] / N
-                # page have links
+                # page have links, divide probabilities
                 elif page in links:
                     total += pages_ranks[page_links] / len(links)
             new_pages_ranks[page] = (1 - damping_factor) / N + damping_factor * total
@@ -192,7 +192,6 @@ def iterate_pagerank(corpus: dict, damping_factor: float) -> dict:
             break
         #pages_ranks = new_pages_ranks
         iteration += 1
-        
         #print(f"Iteration {iteration}: {pages_ranks}")
     return pages_ranks
     # All pages_ranks must have an difference less than .001
