@@ -153,9 +153,12 @@ def iterate_pagerank(corpus: dict, damping_factor: float) -> dict:
     """
     accuracy_factor = 0.001
     N = len(corpus)
-    page_ranks = dict()
-    for page in corpus:
-        page_ranks[page] = 1 / N
+    ## Use list comprehensions instead
+    # page_ranks = dict()
+    # for page in corpus:
+    #     page_ranks[page] = 1 / N
+    ### This is faster beacuse it faster because list comprehensions are implemented in C under the hood and optimized internally:
+    page_ranks = {page: 1 / N for page in corpus}
     iteration = 0
 
     while True:
