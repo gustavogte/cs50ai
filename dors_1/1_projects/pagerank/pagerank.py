@@ -172,16 +172,17 @@ def iterate_pagerank(corpus: dict, damping_factor: float) -> dict:
     while True:
         new_pages_ranks = dict()
         for page in corpus:
-            total = 0
+            # Initialize ranks sum
+            total_ranks = 0
             for page_links in corpus:
                 links = corpus[page_links]
                 # no links, equal probablility
                 if len(links) == 0:
-                    total += pages_ranks[page_links] / N
+                    total_ranks += pages_ranks[page_links] / N
                 # page have links, divide probabilities
                 elif page in links:
-                    total += pages_ranks[page_links] / len(links)
-            new_pages_ranks[page] = (1 - damping_factor) / N + damping_factor * total
+                    total_ranks += pages_ranks[page_links] / len(links)
+            new_pages_ranks[page] = (1 - damping_factor) / N + damping_factor * total_ranks
 
         # Check convergence
         for page in corpus:
