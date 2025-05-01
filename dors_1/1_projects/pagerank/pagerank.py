@@ -161,16 +161,16 @@ def iterate_pagerank(corpus: dict, damping_factor: float) -> dict:
     accurracy_factor = 0.001
 
     # First iteration => Initialize values 1 / N
-    pages_ranks = dict()
+    start_pages_ranks = dict()
     N = len(corpus)
     for page in corpus:
-        pages_ranks[page] = 1 / N
+        start_pages_ranks[page] = 1 / N
     # print(pages_ranks)
     # print()
 
     iteration = 0
     while True:
-        new_pages_ranks = dict()
+        pages_ranks = dict()
         for page in corpus:
             # Initialize ranks sum
             total_ranks = 0
@@ -178,16 +178,16 @@ def iterate_pagerank(corpus: dict, damping_factor: float) -> dict:
                 links = corpus[page_links]
                 # no links, equal probablility
                 if len(links) == 0:
-                    total_ranks += pages_ranks[page_links] / N
+                    total_ranks += start_pages_ranks[page_links] / N
                 # page have links, divide probabilities
                 elif page in links:
-                    total_ranks += pages_ranks[page_links] / len(links)
-            new_pages_ranks[page] = (1 - damping_factor) / N + damping_factor * total_ranks
+                    total_ranks += start_pages_ranks[page_links] / len(links)
+            pages_ranks[page] = (1 - damping_factor) / N + damping_factor * total_ranks
 
         # Check convergence
         for page in corpus:
-            difference = abs(new_pages_ranks[page] - pages_ranks[page])
-        pages_ranks = new_pages_ranks
+            difference = abs(pages_ranks[page] - start_pages_ranks[page])
+        start_pages_ranks = pages_ranks
         #print("diff >>>>>>>>>", difference)
         if difference <= accurracy_factor:
             break
