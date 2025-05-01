@@ -148,7 +148,6 @@ def get_page_2(model: dict) -> str:
 
 
 def iterate_pagerank(corpus: dict, damping_factor: float) -> dict:
-    pass
     """
     Return PageRank values for each page by iteratively updating
     PageRank values until convergence.
@@ -185,13 +184,14 @@ def iterate_pagerank(corpus: dict, damping_factor: float) -> dict:
         # Check convergence
         for page in corpus_keys:
             difference = abs(new_pages_ranks[page] - pages_ranks[page])
-            if difference > 0:
-                True
         pages_ranks = new_pages_ranks
-        iteration += 1
+        #print("diff >>>>>>>>>", difference)
         if difference <= accurracy_factor:
             break
-        # print(f"Iteration {iteration}: {pages_ranks}")
+        #pages_ranks = new_pages_ranks
+        iteration += 1
+        
+        #print(f"Iteration {iteration}: {pages_ranks}")
     return pages_ranks
     # All pages_ranks must have an difference less than .001
     # Must store the previos iteration and the current to check the difference.
