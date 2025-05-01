@@ -98,7 +98,7 @@ def sample_pagerank(corpus: dict, damping_factor: float, n: int) -> dict:
     PageRank values should sum to 1.
     """
     damping_factor = DAMPING
-    n = SAMPLES
+    n = 1000
 
     page = random.choice(list(corpus.keys()))
     # print("Page 0: ", page)
@@ -157,43 +157,44 @@ def iterate_pagerank(corpus: dict, damping_factor: float) -> dict:
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
     """
-    print("\nIterate PageRank\n")
-    quit()
-
-
-def pagerank(corpus: dict, damping_factor: float) -> dict:
-    d = DAMPING
-    accurrate_factor = 0.001
-    corpus_keys = list(corpus.keys())
-    N = len(corpus_keys)
-
-    fix = (1 - d) / N
+    # print("\nIterate PageRank\n")
+    # damping_factor = DAMPING
+    accurracy_factor = 0.001
 
     # First iteration => Initialize values 1 / N
-    pages = dict()
+    pages_ranks = dict()
+    corpus_keys = list(corpus.keys())
+    N = len(corpus_keys)
     for page in corpus_keys:
-        pages[page] = 1 / N
-    print(pages)
-    print()
+        pages_ranks[page] = 1 / N
+    # print(pages_ranks)
+    # print()
 
-    for page in pages:
-        links = corpus[page]
-        n_links = len(links)
-        p = fix
-        for link in links:
-            # Check if our page appears in corpus[page] (links)
-            if page in links:
-                print(page, "->", link)
-                p += d * (pages[page] / n_links)
-                print(page, p)
-            # If there are no links send to all pages with equal probability
-            if n_links == 0:
-                p += d * (pages[page] / N)
-        pages.update({page: p})
-    print(pages)
-    # All pages must have an difference less than .001
+    iteration = 0
+    while True:
+        new_pages_ranks = dict()
+        for page in corpus_keys:
+            total = 0
+            for possible_page, links in corpus.items():
+                if not links:
+                    total += pages_ranks[possible_page] / N
+                elif page in links:
+                    total += pages_ranks[possible_page] / len(links)
+            new_pages_ranks[page] = (1 - damping_factor) / N + damping_factor * total
+
+        # Check convergence
+        for page in corpus_keys:
+            difference = abs(new_pages_ranks[page] - pages_ranks[page])
+            if difference > 0:
+                True
+        pages_ranks = new_pages_ranks
+        iteration += 1
+        if difference <= accurracy_factor:
+            break
+        # print(f"Iteration {iteration}: {pages_ranks}")
+    return pages_ranks
+    # All pages_ranks must have an difference less than .001
     # Must store the previos iteration and the current to check the difference.
-
     # page with no links should be calculated as having one link for every page includint itself.
     # process go until PageRank changes less than .001
 
