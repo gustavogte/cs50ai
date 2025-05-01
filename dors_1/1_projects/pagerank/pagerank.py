@@ -162,9 +162,8 @@ def iterate_pagerank(corpus: dict, damping_factor: float) -> dict:
 
     # First iteration => Initialize values 1 / N
     pages_ranks = dict()
-    corpus_keys = list(corpus.keys())
-    N = len(corpus_keys)
-    for page in corpus_keys:
+    N = len(corpus)
+    for page in corpus:
         pages_ranks[page] = 1 / N
     # print(pages_ranks)
     # print()
@@ -172,7 +171,7 @@ def iterate_pagerank(corpus: dict, damping_factor: float) -> dict:
     iteration = 0
     while True:
         new_pages_ranks = dict()
-        for page in corpus_keys:
+        for page in corpus:
             total = 0
             for possible_page, links in corpus.items():
                 if not links:
@@ -182,7 +181,7 @@ def iterate_pagerank(corpus: dict, damping_factor: float) -> dict:
             new_pages_ranks[page] = (1 - damping_factor) / N + damping_factor * total
 
         # Check convergence
-        for page in corpus_keys:
+        for page in corpus:
             difference = abs(new_pages_ranks[page] - pages_ranks[page])
         pages_ranks = new_pages_ranks
         #print("diff >>>>>>>>>", difference)
