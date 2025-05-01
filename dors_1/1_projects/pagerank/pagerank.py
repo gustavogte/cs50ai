@@ -166,7 +166,7 @@ def iterate_pagerank(corpus: dict, damping_factor: float) -> dict:
     for page in corpus:
         start_pages_ranks[page] = 1 / N
     # print(pages_ranks)
-    # print()
+    print()
 
     iteration = 0
     while True:
@@ -187,13 +187,17 @@ def iterate_pagerank(corpus: dict, damping_factor: float) -> dict:
         # Check convergence
         for page in corpus:
             difference = abs(new_pages_ranks[page] - start_pages_ranks[page])
+        print(f"Iteration: {iteration}")
+        print("start_page_ranks:\n", start_pages_ranks)
+        print("new_page_ranks:\n", new_pages_ranks)
+        print("diff >>>>>", difference)
+        print()
         start_pages_ranks = new_pages_ranks
-        #print("diff >>>>>>>>>", difference)
+        
         if difference <= accurracy_factor:
             break
         #pages_ranks = new_pages_ranks
         iteration += 1
-        #print(f"Iteration {iteration}: {pages_ranks}")
     return new_pages_ranks
     # All pages_ranks must have an difference less than .001
     # Must store the previos iteration and the current to check the difference.
