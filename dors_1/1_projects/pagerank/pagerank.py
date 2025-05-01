@@ -170,7 +170,7 @@ def iterate_pagerank(corpus: dict, damping_factor: float) -> dict:
 
     iteration = 0
     while True:
-        pages_ranks = dict()
+        new_pages_ranks = dict()
         for page in corpus:
             # Initialize ranks sum
             total_ranks = 0
@@ -182,19 +182,19 @@ def iterate_pagerank(corpus: dict, damping_factor: float) -> dict:
                 # page have links, divide probabilities
                 elif page in links:
                     total_ranks += start_pages_ranks[page_links] / len(links)
-            pages_ranks[page] = (1 - damping_factor) / N + damping_factor * total_ranks
+            new_pages_ranks[page] = (1 - damping_factor) / N + damping_factor * total_ranks
 
         # Check convergence
         for page in corpus:
-            difference = abs(pages_ranks[page] - start_pages_ranks[page])
-        start_pages_ranks = pages_ranks
+            difference = abs(new_pages_ranks[page] - start_pages_ranks[page])
+        start_pages_ranks = new_pages_ranks
         #print("diff >>>>>>>>>", difference)
         if difference <= accurracy_factor:
             break
         #pages_ranks = new_pages_ranks
         iteration += 1
         #print(f"Iteration {iteration}: {pages_ranks}")
-    return pages_ranks
+    return new_pages_ranks
     # All pages_ranks must have an difference less than .001
     # Must store the previos iteration and the current to check the difference.
     # page with no links should be calculated as having one link for every page includint itself.
