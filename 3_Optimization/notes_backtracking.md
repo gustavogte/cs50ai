@@ -11,3 +11,6 @@ for value in Domain-Values(var, assignment, csp):
             return result
         remove {var = value} from assignment
     return failure
+
+
+
