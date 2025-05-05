@@ -29,6 +29,7 @@ class CrosswordCreator():
                 i = variable.i + (k if direction == Variable.DOWN else 0)
                 j = variable.j + (k if direction == Variable.ACROSS else 0)
                 letters[i][j] = word[k]
+        print("letter", letters) ##
         return letters
 
     def print(self, assignment):
@@ -99,12 +100,40 @@ class CrosswordCreator():
         (Remove any values that are inconsistent with a variable's unary
          constraints; in this case, the length of the word.)
         """
+        # use self because you are inside of the class or CrosswordCreator can work, but usually is used to call it from outside the class
+        # structure, words = get_structure_and_words()
+        # crossword = Crossword(structure, words)
+        # print("crossword:", crossword, "type:", type(crossword))
+        # print("crossword variables", crossword.variables, type(crossword.variables))
+
+
+        # print("Width, Hight:", crossword.width, crossword.height)
+        # print("crossword variables")
+        # i = 1
+        # for variable in crossword.variables:
+        #     print("variable (word)", i, variable)
+        #     i += 1
+        # print()
+        # print("crossword words=", crossword.words, "type", type(crossword.words))
+        # print()
+        # print("crossword overlaps:")
+        # print("type overlaps", type(crossword.overlaps))
+        # for olap in crossword.overlaps:
+        #     print(olap, crossword.overlaps[olap])
+
+        #print(self.crossword.words)
+        
         for v in self.domains:
-        ## Use "list" to avoid change size durtig iterattion
-        ## You can also use shallow copy or list comprehension similar to map or filter in other laguages.
+            #print(v, "len v = ", v.length)
+            ## Use "list" to avoid change size durtig iterattion
             for x in list(self.domains[v]):
+                #print(v, "len v =", v.length, x, len(x))
                 if v.length != len(x):
                     self.domains[v].remove(x)
+
+        for v in self.domains:
+            print(v, self.domains[v])
+
 
     def revise(self, x, y):
         """
@@ -115,6 +144,8 @@ class CrosswordCreator():
         Return True if a revision was made to the domain of `x`; return
         False if no revision was made.
         """
+        
+        
         raise NotImplementedError
 
     def ac3(self, arcs=None):
@@ -126,6 +157,7 @@ class CrosswordCreator():
         Return True if arc consistency is enforced and no domains are empty;
         return False if one or more domains end up empty.
         """
+        quit()
         raise NotImplementedError
 
     def assignment_complete(self, assignment):
@@ -172,9 +204,19 @@ class CrosswordCreator():
         """
         raise NotImplementedError
 
+def get_structure_and_words():
+    # Check usage
+    if len(sys.argv) not in [3, 4]:
+        sys.exit("Usage: python generate.py structure words [output]")
+
+    # Parse command-line arguments
+    structure = sys.argv[1]
+    words = sys.argv[2]
+    return structure, words
+
 
 def main():
-
+    
     # Check usage
     if len(sys.argv) not in [3, 4]:
         sys.exit("Usage: python generate.py structure words [output]")
@@ -188,6 +230,7 @@ def main():
     crossword = Crossword(structure, words)
     creator = CrosswordCreator(crossword)
     assignment = creator.solve()
+
 
     # Print result
     if assignment is None:
