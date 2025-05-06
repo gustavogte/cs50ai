@@ -85,12 +85,17 @@ class CrosswordCreator():
                         )
 
         img.save(filename)
-
+    
+    ## GG Include call to revise function
     def solve(self):
         """
         Enforce node and arc consistency, and then solve the CSP.
         """
         self.enforce_node_consistency()
+        ## GG revise
+        x = Variable(0,1, Variable.ACROSS, 3)
+        y = Variable(4,1, Variable.ACROSS, 4)
+        self.revise(x, y)
         self.ac3()
         return self.backtrack(dict())
 
@@ -124,7 +129,7 @@ class CrosswordCreator():
         #print(self.crossword.words)
         
         for v in self.domains:
-            #print(v, "len v = ", v.length)
+            print(v, "type: ", type(v))
             ## Use "list" to avoid change size durtig iterattion
             for x in list(self.domains[v]):
                 #print(v, "len v =", v.length, x, len(x))
@@ -135,7 +140,7 @@ class CrosswordCreator():
             print(v, self.domains[v])
 
 
-    def revise(self, x, y):
+    def revise(self, x:Variable, y:Variable) -> bool:
         """
         Make variable `x` arc consistent with variable `y`.
         To do so, remove values from `self.domains[x]` for which there is no
@@ -144,8 +149,11 @@ class CrosswordCreator():
         Return True if a revision was made to the domain of `x`; return
         False if no revision was made.
         """
-        
-        
+        print("\nrevise:\n")
+        print("x: ", x)
+        print("y: ", y)
+
+        quit()
         raise NotImplementedError
 
     def ac3(self, arcs=None):
