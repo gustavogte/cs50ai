@@ -368,21 +368,45 @@ class CrosswordCreator:
         print(neighbors_var)
         for vecino in neighbors_var:
             print(self.domains[vecino])
-         
+
+        print("\n....")
+        order_dict = dict()
+        for word in self.domains[var]:
+            order_dict[word] = 0
+
+        print("order dict\n",order_dict)
+
+
+    
         for v in neighbors_var:
             overlap = self.crossword.overlaps[var, v]
             if overlap is not None:
                 i, j = overlap
                 print(i, j)
+                print("var: ", var, self.domains[var], "v_neighbors: ", v, self.domains[v])
+                for word in self.domains[var]:
+                    print("var: ",word, word[i])
+                    for word_n in self.domains[v]:
+                        print("v_neighbors: ", word_n, word_n[j])
+                        if word[i] == word_n[j]:
+                            print(word[i], word_n[j])
+                            order_dict[word] += 1
+                        else:
+                            print("different")
+        print("\nOrder dict", order_dict)
+        sorted_items = sorted(order_dict.items(), key=lambda item: item[1], reverse=True)
 
-
+        print(sorted_items)
+        #order_list = sorted_items.keys()
+        #print("Order List\n", order_list)
+        final_list = list()
+        for w in sorted_items:
+            print(w, w[0])
+            final_list.append(w[0])
         
-        
-        quit()
+        print("final list \n", final_list)
 
-
-
-
+        return final_list
 
     def select_unassigned_variable(self, assignment):
         """
@@ -392,7 +416,35 @@ class CrosswordCreator:
         degree. If there is a tie, any of the tied variables are acceptable
         return values.
         """
-        raise NotImplementedError
+        print("Variables\n", self.crossword.variables)
+
+        print("Assingment\n", assignment)
+
+        unassigned_dict = dict()
+
+        for var in self.crossword.variables:
+            if var not in assignment:
+                unassigned_dict[var] = 0
+
+        print(unassigned_dict)
+
+        for var in unassigned_dict:
+            print(self.domains[var], len(self.domains[var]), len(self.crossword.neighbors(var)))
+            unassigned_dict[var] = (len(self.domains[var]), len(self.crossword.neighbors(var)))
+
+        print("Unassigned_dict\n", unassigned_dict)
+
+        sorted_items = sorted(unassigned_dict.items(), key=lambda item: (item[1][0], -item[1][1]))
+
+        print("Now Sorted\n", sorted_items)
+
+        #print("\nValue\n", sorted_items[0][0])
+
+        if len(unassigned_dict) > 0:
+            return sorted_items[0][0]
+        else:
+            return None
+
 
     def backtrack(self, assignment):
         """
@@ -411,21 +463,26 @@ class CrosswordCreator:
 
         assignment_b = {Variable(0, 1, 'down', 5): 'SEVEN', Variable(4, 1, 'across', 4): 'NINE'}
 
-        assignment_h = {Variable(0, 1, 'down', 5): "SEVEN", Variable(4, 1, 'across', 4): 'NINE', Variable(0, 1, 'across', 3): 'SIX', Variable(1, 4, 'down', 4): "NINE"}
+        assignment_h = {Variable(0, 1, 'down', 5): "SEVEN"}
+
         #print(assignment_b)
 
-        print(self.assignment_complete(assignment_b))
-        print(self.assignment_complete(assignment_g))
-        print(self.assignment_complete(assignment_h))
-        print(self.assignment_complete({}))
-        print("Consistent")
-        print(self.consistent(assignment_b))
-        print(self.consistent(assignment_g))
-        print(self.consistent(assignment_h))
+        #print(self.assignment_complete(assignment_b))
+        #print(self.assignment_complete(assignment_g))
+        #print(self.assignment_complete(assignment_h))
+        # print(self.assignment_complete({}))
+        # print("Consistent")
+        # print(self.consistent(assignment_b))
+        # print(self.consistent(assignment_g))
+        # print(self.consistent(assignment_h))
 
-        print("Order Domain")
-        var = Variable(0, 1, 'across', 3)
-        print(self.order_domain_values(var, assignment_b))
+        # print("Order Domain")
+        # var = Variable(0, 1, 'across', 3)
+        # #var = Variable(0, 1, 'down', 5)
+
+        # print(self.order_domain_values(var, assignment_g))
+
+        print(self.select_unassigned_variable(assignment_g))
 
         quit()
 
