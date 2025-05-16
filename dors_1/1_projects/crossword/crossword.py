@@ -124,6 +124,45 @@ class Crossword():
                         cells1.index(intersection),
                         cells2.index(intersection)
                     )
+# ───────────────────────────────────────────────────
+        # DEBUG PRINTS
+        # ───────────────────────────────────────────────────
+        RED   = "\033[91m"
+        BLUE  = "\033[94m"
+        GREEN = "\033[92m"
+        BOLD  = "\033[1m"
+        END   = "\033[0m"
+
+        print(f"\n{BOLD}-- STRUCTURE OF CROSSWORD --{END}")
+        for row in self.structure:
+            print("".join("■" if not cell else "▢" for cell in row))
+        # print words
+        print("\nwords= ", self.words)
+        print()
+        print(f"\n{BOLD}-- VARIABLES DETECTED ({len(self.variables)}) --{END}")
+        for var in sorted(self.variables, key=lambda v: (v.direction, v.i, v.j)):
+            color = RED if var.direction == Variable.DOWN else BLUE
+            print(f"{color}{var}{END}  cells={var.cells}")
+
+        print(f"\n{BOLD}-- OVERLAPS --{END}")
+        for (v1, v2), ov in self.overlaps.items():
+            if ov:
+                print(f"{GREEN}{v1}{END} ↔ {GREEN}{v2}{END}  overlap index={ov}")
+        print()
+        print("Overlap idex: (x = position of letter in word x)")
+        print("Overlap idex: (y = position of letter in word y)")
+
+        print(f"\n{BOLD}-- COORDINATES --{END}")
+        for i, row in enumerate(self.structure):
+            for j, cell in enumerate(row):
+                if cell:
+                    print(f"({i}, {j})", end=" ")
+                else:
+                    print("   ■   ", end=" ")
+            print()
+        print(f"{BOLD}-- END OF DEBUG --{END}\n")
+        print()
+
 
     def neighbors(self, var):
         """Given a variable, return set of overlapping variables."""
