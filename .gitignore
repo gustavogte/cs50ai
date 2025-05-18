@@ -3,3 +3,4 @@ __pycache__/
 *.pyc
 .vscode/*
 cs50ai.code-workspace.json
+output*
