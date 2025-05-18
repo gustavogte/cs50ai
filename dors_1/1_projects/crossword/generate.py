@@ -106,9 +106,9 @@ class CrosswordCreator:
         for v in self.domains:
             ## Use "list" to avoid change size during iterattion
             ## You can also use shallow copy or list comprehension similar to map or filter in other laguages.
-            for x in list(self.domains[v]):
-                if v.length != len(x):
-                    self.domains[v].remove(x)
+            for word in list(self.domains[v]):
+                if len(word) != v.length:
+                    self.domains[v].remove(word)
 
     def revise3(self, x, y):
         overlap = self.crossword.overlaps[x, y]
@@ -231,11 +231,12 @@ class CrosswordCreator:
         Return True if `assignment` is consistent (i.e., words fit in crossword
         puzzle without conflicting characters); return False otherwise.
         """
+        # Every value (word) is the correct length for the variable.
         for v in assignment:
             #print(v, v.length, assignment[v])
             if v.length != len(assignment[v]):
                 return False
-        # Check Neighbors overlaps    
+        # Check Neighbors overlaps (No conflict between neigbhors)    
         for v1 in assignment:
             for v2 in assignment:
                 if v1 != v2:
@@ -244,7 +245,7 @@ class CrosswordCreator:
                         i, j = overlap
                         if assignment[v1][i] != assignment[v2][j]:
                             return False
-        # Check no repeated words
+        # Check no repeated words (All values are distinct)  
         for v1 in assignment:
             for v2 in assignment:
                 if v1 != v2:
@@ -315,8 +316,23 @@ class CrosswordCreator:
 
         If no assignment is possible, return None.
         """
-        raise NotImplementedError
+        # check if assigment is complete
+        if self.assignment_complete(assignment):
+            return assignment
+        
+        # Try a new variable
+        var = self.select_unassigned_variable(assignment)
 
+        for word in self.order_domain_values(var, assignment):
+            new_assignment = assignment.copy()
+            new_assignment[var] = word
+
+            if self.consistent(new_assignment):
+                result = self.backtrack(new_assignment)
+
+                if result:
+                    return result
+        return None
 
 def main():
 
