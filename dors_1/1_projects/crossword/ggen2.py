@@ -422,24 +422,34 @@ class CrosswordCreator:
         If no assignment is possible, return None.
         """
         print("\nBacktrack\n")
+        note = """
+        # Solve: runs   self.enforce_node_consitency()
+        # inferences => self.ac3()
+
+        # Every time we do an assignment I should enforce Arc Consistency before using backtrack.
+        """
+        print(note)
+        
         # check if assigment is complete
         if self.assignment_complete(assignment):
             return assignment
         
         # Try a new variable
         var = self.select_unassigned_variable(assignment)
-
+ 
         for word in self.order_domain_values(var, assignment):
             new_assignment = assignment.copy()
             new_assignment[var] = word
 
             if self.consistent(new_assignment):
                 result = self.backtrack(new_assignment)
-
-                if result:
+                
+                if result is not None:
                     return result
+           
         return None
-            
+
+    
 
 def get_structure_and_words():
     # Check usage

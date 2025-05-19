@@ -323,6 +323,7 @@ class CrosswordCreator:
         # Try a new variable
         var = self.select_unassigned_variable(assignment)
 
+        # 
         for word in self.order_domain_values(var, assignment):
             new_assignment = assignment.copy()
             new_assignment[var] = word
