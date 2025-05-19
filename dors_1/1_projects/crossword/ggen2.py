@@ -241,13 +241,13 @@ class CrosswordCreator:
                 # print(arc)
                 arcs_queue.append(arc)
             arcs = arcs_queue
-        print(f"\nDebug >>>>>>>>>\n")
-        print(f"\narcs =\n {arcs}")
-        print(f"\n<<<<<<<< Debug End\n")
+        #print(f"\nDebug >>>>>>>>>\n")
+        #print(f"\narcs =\n {arcs}")
+        #print(f"\n<<<<<<<< Debug End\n")
         while len(arcs) > 0:
-            print(arcs)
-            print()
-            print(f"\narcs{arcs}\n") 
+            #print(arcs)
+            #print()
+            #print(f"\narcs{arcs}\n") 
             x, y = arcs[0]
             arcs.remove(arcs[0])
             if self.revise(x, y):
@@ -426,6 +426,8 @@ class CrosswordCreator:
         # Solve: runs   self.enforce_node_consitency()
         # inferences => self.ac3()
 
+        =>> then runs backtrack
+
         # Every time we do an assignment I should enforce Arc Consistency before using backtrack.
         """
         print(note)
@@ -440,12 +442,14 @@ class CrosswordCreator:
         for word in self.order_domain_values(var, assignment):
             new_assignment = assignment.copy()
             new_assignment[var] = word
+            # inferences is done with arc consistency and self.select_unassigned_variables
 
             if self.consistent(new_assignment):
                 result = self.backtrack(new_assignment)
                 
                 if result is not None:
                     return result
+            # remove is also done with arc consitency: ac3
            
         return None
 
