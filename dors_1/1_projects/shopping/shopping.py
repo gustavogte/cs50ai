@@ -59,7 +59,6 @@ def load_data(filename):
     labels should be the corresponding list of labels, where each label
     is 1 if Revenue is true, and 0 otherwise.
     """
-    print("\nLoad Data\n")
     evidence = list()
     labels = list()
     count = 0
@@ -94,14 +93,16 @@ def load_data(filename):
                     row[17] = 0
                 else:
                     row[17] = 1
-                count += 1
-        evidence.append(row[0:17])
-        labels.append(row[17])
-    print(evidence[0:5])
-    print(labels[0:5])
-        
-    quit()
-    raise NotImplementedError
+                evidence.append(row[0:17])
+                labels.append(row[17])
+            count += 1
+    # print(evidence[0:3])
+    # print(labels[0:3])
+    # print(tuple((evidence[0:3], labels[0:3])))
+    # quit() 
+    return tuple((evidence, labels))
+
+    
 
 def get_month(month:str)-> int:
     months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
