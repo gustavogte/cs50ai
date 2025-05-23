@@ -99,13 +99,25 @@ def load_data(filename):
     # print(evidence[0:3])
     # print(labels[0:3])
     # print(tuple((evidence[0:3], labels[0:3])))
-    # quit() 
+    # quit()
     return tuple((evidence, labels))
 
-    
 
-def get_month(month:str)-> int:
-    months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+def get_month(month: str) -> int:
+    months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "June",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+    ]
     return months.index(month)
 
 
@@ -114,8 +126,13 @@ def train_model(evidence, labels):
     Given a list of evidence lists and a list of labels, return a
     fitted k-nearest neighbor model (k=1) trained on the data.
     """
-    raise NotImplementedError
-
+    print("\nTransition Model\n")
+    model = KNeighborsClassifier(n_neighbors=1)
+    X_training = evidence
+    Y_training = labels
+    result = model.fit(X_training, Y_training)
+    print(result)
+    return result
 
 def evaluate(labels, predictions):
     """
@@ -132,8 +149,91 @@ def evaluate(labels, predictions):
     representing the "true negative rate": the proportion of
     actual negative labels that were accurately identified.
     """
-    raise NotImplementedError
+    print("\nEvaluate\n")
+    
+    sensitivity = float()
+    specificity = float()
 
+    correct_prediction = 0
+    true_positives = 0
+    true_negatives = 0
+    total_positives = 0
+    total_negatives = 0
+
+    for actual, predicted in zip(labels, predictions):
+        if actual == predicted:
+            correct_prediction += 1
+        if actual == 1:
+            total_positives += 1
+        if actual == 1 and predicted == 1:
+            true_positives += 1
+        if actual == 0:
+            total_negatives += 1
+        if actual == 0 and predicted == 0:
+            true_negatives += 1
+        
+
+    sensitivity = true_positives / total_positives
+    specificity = true_negatives / total_negatives
+
+    print("Correct Predictions =", correct_prediction)
+    print("% Correct =", correct_prediction / (total_positives + total_negatives))
+    print("true positives =", true_positives)
+    print("true negatives =", true_negatives)
+    print("Sensitivity =", sensitivity)
+    print("Specificity =", specificity)
+
+    return (sensitivity, specificity)
+    
+
+
+def evaluate2(labels, predictions):
+
+    print("\nEvaluate\n")
+    
+    sensitivity = float()
+    specificity = float()
+    
+    count = 0
+    correct_prediction = 0
+    true_positives = 0
+    true_negatives = 0
+    total_positives = 0
+    total_negatives = 0
+
+    for actual, predicted in zip(labels, predictions):
+        if actual == 1:
+            total_positives += 1
+            if predicted == 1:
+                true_positives += 1
+        if actual == 0:
+            total_negatives += 1
+            if predicted == 0:
+                true_negatives += 1
+        if actual == predicted:
+            correct_prediction += 1
+        count += 1
+
+    # Compute metrics
+    if total_positives > 0:
+        sensitivity = true_positives / total_positives
+    else:
+        sensitivity = 0.0
+
+    if total_negatives > 0:
+        specificity = true_negatives / total_negatives
+    else:
+        specificity = 0.0
+
+    print("\ncount =", count)
+    print("Correct Predictions =", correct_prediction)
+    print("% Correct =", correct_prediction / count)
+    print("true positives =", true_positives)
+    print("true negatives =", true_negatives)
+    print("Sensitivity =", sensitivity)
+    print("Specificity =", specificity)
+
+    return (sensitivity, specificity)
 
 if __name__ == "__main__":
     main()
