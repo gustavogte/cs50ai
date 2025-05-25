@@ -144,12 +144,16 @@ class NimAI():
         `state`, return 0.
         """
         actions = Nim.available_actions(state)
+        
+        if len(actions) == 0:
+            return 0
+        
         max_q = float("-inf")
         for action in actions:
             q = self.get_q_value(state, action)
             if q > max_q:
                 max_q = q
-        # Return 0 if there is no valid value for max_q
+        # Avoid return - infinite 
         return max_q if max_q != float("-inf") else 0
         
 
@@ -168,8 +172,53 @@ class NimAI():
         If multiple actions have the same Q-value, any of those
         options is an acceptable return value.
         """
-        raise NotImplementedError
+        actions = list(Nim.available_actions(state))
 
+        if not actions:
+            return None  # No hay acciones disponibles
+
+        # El agente explora; con probabilidad epsilon
+        if epsilon and random.uniform(0,1) < self.epsilon:
+            return random.choice(actions)
+
+        # Explotación: elegir la mejor acción según Q-values
+        max_q = float('-inf')
+        best_actions = []
+
+        for action in actions:
+            q = self.get_q_value(state, action)
+            if q > max_q:
+                max_q = q
+                # Actualiza la lista con mejores acciones
+                best_actions = [action]
+            elif q == max_q:
+                best_actions.append(action)
+                
+                # puede haber empate entre mejores acciones
+        return random.choice(best_actions)
+        
+    def choose_action2(self, state, epsilon=True):
+        
+        actions = list(Nim.available_actions(state))
+
+        if not actions:
+            return None  # No hay acciones disponibles
+
+        # El agente explora; con probabilidad self.epsilon
+        if epsilon and random.uniform(0,1) < self.epsilon:
+            return random.choice(actions)
+
+        # El agente no explora y regresa la mejor acción posible
+        q_values = {}
+        for action in actions:
+            q = self.get_q_value(state, action)
+            q_values[action] = q
+        
+        max_q = max(q_values.values())
+
+        best_actions = [action for actions, q in q_values.items() if q == max_q]
+
+        return random.choice(best_actions)
 
 def train(n):
     """
