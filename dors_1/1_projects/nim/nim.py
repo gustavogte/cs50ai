@@ -133,7 +133,7 @@ class NimAI():
         # no need to return
     
         
-    def best_future_reward(self, state):
+    def best_future_reward2(self, state):
         """
         Given a state `state`, consider all possible `(state, action)`
         pairs available in that state and return the maximum of all
@@ -155,7 +155,23 @@ class NimAI():
                 max_q = q
         # Avoid return - infinite 
         return max_q if max_q != float("-inf") else 0
-        
+    
+    def best_future_reward(self, state):
+        """
+        Return the highest Q-value of any available action in the given state.
+        Use 0 if no Q-values exist or no actions are available.
+        """
+        actions = Nim.available_actions(state)
+
+        if not actions:
+            return 0
+
+        # Lista de Q-values para todas las acciones disponibles
+        q_values = [self.get_q_value(state, action) for action in actions]
+
+        # Retorna el valor máximo, o 0 si la lista está vacía (por seguridad extra)
+        return max(q_values, default=0)
+            
 
     def choose_action(self, state, epsilon=True):
         """
@@ -216,7 +232,7 @@ class NimAI():
         
         max_q = max(q_values.values())
 
-        best_actions = [action for actions, q in q_values.items() if q == max_q]
+        best_actions = [action for action, q in q_values.items() if q == max_q]
 
         return random.choice(best_actions)
 
