@@ -96,18 +96,27 @@ class NimAI():
         best_future = self.best_future_reward(new_state)
         self.update_q_value(old_state, action, old, reward, best_future)
 
-    def get_q_value(self, state, action):
+    def get_q_value2(self, state, action):
         """
         Return the Q-value for the state `state` and the action `action`.
         If no Q-value exists yet in `self.q`, return 0.
         """
-        raise NotImplementedError
+        key = (tuple(state), action)
+        # Make sure the key exists in the dictonary
+        if key in self.q:
+            return self.q[key]
+        else:
+            return 0
+    
+    def get_q_value(self, state, action):
+        # More compact form:
+        return self.q.get((tuple(state), action), 0)
 
     def update_q_value(self, state, action, old_q, reward, future_rewards):
         """
         Update the Q-value for the state `state` and the action `action`
         given the previous Q-value `old_q`, a current reward `reward`,
-        and an estiamte of future rewards `future_rewards`.
+        and an estimate of future rewards `future_rewards`.
 
         Use the formula:
 
@@ -118,8 +127,12 @@ class NimAI():
         `alpha` is the learning rate, and `new value estimate`
         is the sum of the current reward and estimated future rewards.
         """
-        raise NotImplementedError
-
+        key = (tuple(state), action)
+        q  = old_q + self.alpha * ((reward + future_rewards) - old_q)
+        self.q[key] = q      
+        return self.q[key]
+    
+        
     def best_future_reward(self, state):
         """
         Given a state `state`, consider all possible `(state, action)`
