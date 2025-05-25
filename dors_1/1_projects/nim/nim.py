@@ -130,7 +130,7 @@ class NimAI():
         key = (tuple(state), action)
         q  = old_q + self.alpha * ((reward + future_rewards) - old_q)
         self.q[key] = q      
-        return self.q[key]
+        # no need to return
     
         
     def best_future_reward(self, state):
