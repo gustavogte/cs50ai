@@ -1,6 +1,5 @@
 import csv
 import tensorflow as tf
-import numpy as np
 
 from sklearn.model_selection import train_test_split
 
@@ -23,7 +22,6 @@ X_training, X_testing, y_training, y_testing = train_test_split(
     evidence, labels, test_size=0.4
 )
 
-
 # Create a neural network
 model = tf.keras.models.Sequential()
 
@@ -33,12 +31,6 @@ model.add(tf.keras.layers.Dense(8, input_shape=(4,), activation="relu"))
 # Add output layer with 1 unit, with sigmoid activation
 model.add(tf.keras.layers.Dense(1, activation="sigmoid"))
 
-## solution from chatgpt
-## X_training y y_training son listas de floats y no un NumPy array, que es lo que espera Keras. Por lo tanto hay que convertirlos con numpy
-X_training = np.array(X_training)
-y_training = np.array(y_training)
-
-
 # Train neural network
 model.compile(
     optimizer="adam",
@@ -46,11 +38,6 @@ model.compile(
     metrics=["accuracy"]
 )
 model.fit(X_training, y_training, epochs=20)
-
-## solution from chatgpt
-## X_testing y y_testing son listas de floats y no un NumPy array, que es lo que espera Keras. Por lo tanto hay que convertirlos con numpy
-X_testing = np.array(X_testing)
-y_testing = np.array(y_testing)
 
 # Evaluate how well model performs
 model.evaluate(X_testing, y_testing, verbose=2)

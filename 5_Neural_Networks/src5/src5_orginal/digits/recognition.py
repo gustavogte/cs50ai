@@ -4,6 +4,9 @@ import sys
 import tensorflow as tf
 import time
 
+import keras
+keras.backend.set_image_data_format('channels_last')
+
 # Check command-line arguments
 if len(sys.argv) != 2:
     sys.exit("Usage: python recognition.py model")
