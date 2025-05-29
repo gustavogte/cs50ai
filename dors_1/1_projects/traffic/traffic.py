@@ -6,11 +6,11 @@ import tensorflow as tf
 
 from sklearn.model_selection import train_test_split
 
-EPOCHS = 10
+EPOCHS = 10 # 10 full cycles through the training data for model learning 
 IMG_WIDTH = 30
 IMG_HEIGHT = 30
-NUM_CATEGORIES = 43
-TEST_SIZE = 0.4
+NUM_CATEGORIES = 43 # types of traffic signs
+TEST_SIZE = 0.4 # 60% of images to train 40% to test and predict
 
 
 def main():
@@ -22,7 +22,7 @@ def main():
     # Get image arrays and labels for all image files
     images, labels = load_data(sys.argv[1])
 
-    # Split data into training and testing sets
+    # Split data into training and testing sets 60-40%
     labels = tf.keras.utils.to_categorical(labels)
     x_train, x_test, y_train, y_test = train_test_split(
         np.array(images), np.array(labels), test_size=TEST_SIZE
@@ -54,11 +54,25 @@ def load_data(data_dir):
 
     Return tuple `(images, labels)`. `images` should be a list of all
     of the images in the data directory, where each image is formatted as a
-    numpy ndarray with dimensions IMG_WIDTH x IMG_HEIGHT x 3. `labels` should
+    numpy ndarray with dimensions IMG_WIDTH x IMG_HEIGHT x 3 (RGB colors). `labels` should
     be a list of integer labels, representing the categories for each of the
     corresponding `images`.
     """
-    raise NotImplementedError
+    images = list()
+    labels = list()
+
+    for category in range(NUM_CATEGORIES):
+        # Get folder 0 (/gtrsb/0)
+        category_folder = os.path.join(data_dir, str(0))
+        #category_folder = os.path.join(data_dir, category)
+        if os.path.isdir(category_folder):
+            for filename in os.listdir(category_folder):
+                image_path = os.path.join(category_folder, filename)
+                image = cv2.imread(image_path)
+                image = cv2.resize(image, (IMG_WIDTH, IMG_HEIGHT))
+                images.append(image)
+                labels.append(category)
+    return images, labels
 
 
 def get_model():
@@ -67,7 +81,37 @@ def get_model():
     `input_shape` of the first layer is `(IMG_WIDTH, IMG_HEIGHT, 3)`.
     The output layer should have `NUM_CATEGORIES` units, one for each category.
     """
-    raise NotImplementedError
+    # Create a convolutional neural network
+    model = tf.keras.models.Sequential([
+
+        # Convolutional layer. Learn 32 filters using a 3x3 kernel
+        # change 3 for the RGB
+        tf.keras.layers.Conv2D(
+            32, (3, 3), activation="relu", input_shape=(IMG_WIDTH, IMG_HEIGHT, 3)
+        ),
+
+        # Max-pooling layer, using 2x2 pool size
+        tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
+
+        # Flatten units
+        tf.keras.layers.Flatten(),
+
+        # Add a hidden layer with dropout
+        tf.keras.layers.Dense(128, activation="relu"),
+        tf.keras.layers.Dropout(0.5),
+
+        # Add an output layer with 43 categories
+        tf.keras.layers.Dense(NUM_CATEGORIES, activation="softmax")
+    ])
+
+    # Train neural network
+    model.compile(
+        optimizer="adam",
+        loss="categorical_crossentropy",
+        metrics=["accuracy"]
+    )
+
+    return model
 
 
 if __name__ == "__main__":
