@@ -2,6 +2,8 @@ from collections import Counter
 
 import math
 import nltk
+#nltk.download('punkt')
+# No need to set download_dir manually
 import os
 import sys
 
