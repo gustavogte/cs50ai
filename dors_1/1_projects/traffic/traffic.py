@@ -6,7 +6,7 @@ import tensorflow as tf
 
 from sklearn.model_selection import train_test_split
 
-EPOCHS = 10 # 10 full cycles through the training data for model learning 
+EPOCHS = 20 # 10 full cycles through the training data for model learning 
 IMG_WIDTH = 30
 IMG_HEIGHT = 30
 NUM_CATEGORIES = 43 # types of traffic signs
@@ -63,8 +63,8 @@ def load_data(data_dir):
 
     for category in range(NUM_CATEGORIES):
         # Get folder 0 (/gtrsb/0)
-        category_folder = os.path.join(data_dir, str(0))
-        #category_folder = os.path.join(data_dir, category)
+        #category_folder = os.path.join(data_dir, str(0))
+        category_folder = os.path.join(data_dir, str(category))
         if os.path.isdir(category_folder):
             for filename in os.listdir(category_folder):
                 image_path = os.path.join(category_folder, filename)
@@ -98,8 +98,10 @@ def get_model():
 
         # Add a hidden layer with dropout
         tf.keras.layers.Dense(128, activation="relu"),
+        #tf.keras.layers.Dense(64, activation="relu"),
         tf.keras.layers.Dropout(0.5),
-
+        
+        
         # Add an output layer with 43 categories
         tf.keras.layers.Dense(NUM_CATEGORIES, activation="softmax")
     ])

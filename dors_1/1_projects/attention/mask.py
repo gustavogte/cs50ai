@@ -11,7 +11,9 @@ MODEL = "bert-base-uncased"
 K = 3
 
 # Constants for generating attention diagrams
-FONT = ImageFont.truetype("assets/fonts/OpenSans-Regular.ttf", 28)
+#FONT = ImageFont.truetype("assets/fonts/OpenSans-Regular.ttf", 28)
+# Only for Debugger
+#FONT = ImageFont.truetype("/Users/g-mac/Code/cs50ai/dors_1/1_projects/attention/assets/fonts", 28)
 GRID_SIZE = 40
 PIXELS_PER_WORD = 200
 
@@ -74,6 +76,7 @@ def visualize_attentions(tokens, attentions):
     (starting count from 1).
     """
     # TODO: Update this function to produce diagrams for all layers and heads.
+    
     for layer_index, layer in enumerate(attentions):
         for head_index, head in enumerate(layer[0]):
             generate_diagram(layer_index + 1, head_index + 1, tokens, head.numpy())
@@ -96,6 +99,7 @@ def generate_diagram(layer_number, head_number, tokens, attention_weights):
     The diagram is saved with a filename that includes both the `layer_number`
     and `head_number`.
     """
+    FONT = ""
     # Create new image
     image_size = GRID_SIZE * len(tokens) + PIXELS_PER_WORD
     img = Image.new("RGBA", (image_size, image_size), "black")
